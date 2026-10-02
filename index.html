@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapping Earthquake-Prone Zones in the Himalayan Region | Interactive Geospatial Platform</title>
+  <meta name="description" content="An interactive geospatial GIS study and mapping platform exploring earthquake-prone zones, tectonic fault systems (MHT, MBT, MCT, HFF), historical megaquakes, and seismic safety across India, Nepal, Bhutan, Pakistan, and China.">
+  <meta name="keywords" content="Himalayan earthquakes, seismic hazard zones, Indian plate, Eurasian plate, Main Himalayan Thrust, Nepal earthquake, GIS map, seismic risk">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Leaflet GIS CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+  <!-- Custom Theme CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Site Navigation Header -->
+  <header class="site-header" id="site-header">
+    <div class="container navbar">
+      <a href="#home" class="nav-brand" id="brand-logo" aria-label="Himalayan Seismology Home">
+        <div class="brand-icon-wrap">
+          <div class="pulse-ring"></div>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h1>HIMALAYAN SEISMIC LAB</h1>
+          <span>Geospatial Hazard & Tectonic Study</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav Links -->
+      <nav>
+        <ul class="nav-links" id="nav-menu">
+          <li><a href="#about" id="nav-about">Tectonic Genesis</a></li>
+          <li><a href="#interactive-map" id="nav-map">Interactive Map</a></li>
+          <li><a href="#hazard-zones" id="nav-hazards">Hazard Zones</a></li>
+          <li><a href="#fault-systems" id="nav-faults">Fault Systems</a></li>
+          <li><a href="#historical-earthquakes" id="nav-history">Historical Quakes</a></li>
+          <li><a href="#analytics-dashboard" id="nav-analytics">Statistics</a></li>
+          <li><a href="#safety-guide" id="nav-safety">Safety & Preparedness</a></li>
+          <li><a href="#acknowledgement" id="nav-lpu" style="color: #ff9100;">LPU Acknowledgement</a></li>
+        </ul>
+      </nav>
+
+      <!-- Action Toggles -->
+      <div class="nav-actions">
+        <div class="live-feed-badge" title="USGS Global Seismographic Network Status">
+          <div class="live-dot"></div>
+          <span>SEISMIC MONITOR ACTIVE</span>
+        </div>
+        <a href="#interactive-map" class="btn-primary" id="btn-hero-launch-map">
+          <span>Launch GIS</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+        <button class="mobile-toggle" aria-label="Toggle navigation menu" id="mobile-nav-toggle">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- 1. HERO SECTION -->
+  <section class="hero-section" id="home">
+    <canvas id="hero-canvas" class="hero-canvas-bg"></canvas>
+    
+    <div class="container hero-grid">
+      <!-- Left Hero Content -->
+      <div class="hero-content">
+        <div class="section-tag danger">
+          <span class="live-dot"></span> Continental Collision Zone — Active Orogeny
+        </div>
+        <div class="section-tag" style="background: rgba(255, 122, 0, 0.12); color: #ff9100; border-color: rgba(255, 122, 0, 0.3); margin-left: 6px;">
+          🎓 Academic Initiative • Lovely Professional University
+        </div>
+        <h1 class="hero-title">
+          Mapping Earthquake-Prone Zones in the <span class="gradient-text">Himalayan Region</span>
+        </h1>
+        <p class="hero-subtitle">
+          An interactive geospatial study of seismic hazards, lithospheric fault systems, and historical earthquakes across the collision front of the Indian and Eurasian plates.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="hero-cta-group">
+          <a href="#interactive-map" class="btn-primary" id="cta-explore-map">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
+              <line x1="8" y1="2" x2="8" y2="18"></line>
+              <line x1="16" y1="6" x2="16" y2="22"></line>
+            </svg>
+            Explore Interactive Map
+          </a>
+          <a href="#about" class="btn-secondary" id="cta-learn-tectonics">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="16" x2="12" y2="12"></line>
+              <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+            Why Himalayas Quake
+          </a>
+        </div>
+
+        <!-- Focus Countries Flags Pill Bar -->
+        <div class="country-flags-bar" id="hero-countries-bar">
+          <span class="label">Countries Covered:</span>
+          <div class="flag-pills">
+            <span class="flag-pill">🇮🇳 India</span>
+            <span class="flag-pill">🇳🇵 Nepal</span>
+            <span class="flag-pill">🇧🇹 Bhutan</span>
+            <span class="flag-pill">🇵🇰 Pakistan</span>
+            <span class="flag-pill">🇨🇳 Tibet / China</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Telemetry Scientific HUD -->
+      <div class="hero-telemetry-panel" id="hero-telemetry">
+        <div class="telemetry-header">
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            </svg>
+            Geodynamic Telemetry
+          </h3>
+          <span class="section-tag">LIVE HUD</span>
+        </div>
+
+        <div class="telemetry-stats-grid">
+          <div class="telemetry-stat-box">
+            <div class="stat-label">Convergence Velocity</div>
+            <div class="stat-value primary">~45 <span style="font-size: 1rem; font-weight: 500;">mm/yr</span></div>
+            <div class="stat-sub">Indian Plate colliding NNE into Eurasia</div>
+          </div>
+
+          <div class="telemetry-stat-box">
+            <div class="stat-label">Himalayan Arc Length</div>
+            <div class="stat-value purple">2,400 <span style="font-size: 1rem; font-weight: 500;">km</span></div>
+            <div class="stat-sub">From Nanga Parbat to Namcha Barwa</div>
+          </div>
+
+          <div class="telemetry-stat-box">
+            <div class="stat-label">Primary Basal Decollement</div>
+            <div class="stat-value danger">MHT <span style="font-size: 0.9rem; font-weight: 500;">Thrust</span></div>
+            <div class="stat-sub">Main Himalayan Thrust locked ramp</div>
+          </div>
+
+          <div class="telemetry-stat-box">
+            <div class="stat-label">Seismic Hazard Classification</div>
+            <div class="stat-value amber">Zone V / IV</div>
+            <div class="stat-sub">Peak Ground Acceleration &gt; 0.36g</div>
+          </div>
+        </div>
+
+        <div class="telemetry-footer-pulse">
+          <span>Continuous Strain Accumulation: 18–21 mm/yr Crustal Shortening</span>
+          <div class="live-feed-badge" style="padding: 2px 8px; font-size: 10px;">ISC &bull; USGS DATA</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. ABOUT THE HIMALAYAN EARTHQUAKE ZONE & TECTONIC GENESIS -->
+  <section class="section" id="about">
+    <div class="container">
+      <div class="section-tag">Geodynamic Process</div>
+      <h2 class="section-title">Why Are the Himalayas So Earthquake-Prone?</h2>
+      <p class="section-subtitle">
+        The Himalayas were formed as a result of the ongoing continental collision between the Indian and Eurasian tectonic plates. The relentless northward movement of India produces colossal crustal stress along the Himalayan mountain belt.
+      </p>
+
+      <div class="tectonic-genesis-grid">
+        <!-- 3 Step Mechanism Breakdown -->
+        <div class="tectonic-steps-container" id="tectonic-steps-list">
+          <!-- Step 1 -->
+          <div class="tectonic-step-card active" data-step="1" id="step-card-1">
+            <span class="step-num">STEP 01 — CRUSTAL PLATE MOVEMENT</span>
+            <h3>Indian Plate Moves Northward</h3>
+            <p>
+              Approximately 50 million years ago, the Indian Plate closed the ancient Tethys Ocean and slammed into Eurasia. Today, India continues to wedge northward at a brisk rate of ~40 to 50 mm every year.
+            </p>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="tectonic-step-card" data-step="2" id="step-card-2">
+            <span class="step-num">STEP 02 — CONTINUOUS STRESS ACCUMULATION</span>
+            <h3>Elastic Strain Locked in Fault Systems</h3>
+            <p>
+              Instead of sliding smoothly, friction locks the major fault boundaries (MHT, MBT, MCT, HFF). Around 18 to 21 mm/year of tectonic convergence is compressed directly into the brittle upper 15–20 km of the mountain wedge, bending rocks like a giant subterranean spring.
+            </p>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="tectonic-step-card" data-step="3" id="step-card-3">
+            <span class="step-num">STEP 03 — CATASTROPHIC ENERGY RELEASE</span>
+            <h3>Sudden Decollement Rupture &amp; Seismic Waves</h3>
+            <p>
+              When the shear stress finally overcomes rock friction, the fault ruptures catastrophically. In seconds, stored energy explodes outward as violent seismic P and S waves, generating M7+ and M8+ mega-earthquakes and devastating mountain communities.
+            </p>
+          </div>
+        </div>
+
+        <!-- Interactive Animated Tectonic Cross-Section SVG Diagram -->
+        <div class="tectonic-diagram-card" id="tectonic-visualizer">
+          <div class="diagram-header">
+            <h4>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00f0ff" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+              </svg>
+              Himalayan Lithospheric Cross-Section
+            </h4>
+            <span class="mono" style="font-size: 11px; color: var(--color-primary);" id="tectonic-diagram-status">
+              Interactive Collision Simulation
+            </span>
+          </div>
+
+          <!-- Dynamic SVG Vector Cross-Section -->
+          <div class="tectonic-svg-wrapper">
+            <svg viewBox="0 0 650 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#070e1c"/>
+                  <stop offset="100%" stop-color="#0c172d"/>
+                </linearGradient>
+                <linearGradient id="indianPlateGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#1e293b"/>
+                  <stop offset="100%" stop-color="#0f172a"/>
+                </linearGradient>
+                <linearGradient id="himalayaCrustGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#334155"/>
+                  <stop offset="100%" stop-color="#1e293b"/>
+                </linearGradient>
+                <linearGradient id="tibetanPlateauGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#2a3852"/>
+                  <stop offset="100%" stop-color="#1e2a40"/>
+                </linearGradient>
+                <radialGradient id="stressHeat" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#ff2a51" stop-opacity="0.9"/>
+                  <stop offset="50%" stop-color="#ff7a00" stop-opacity="0.5"/>
+                  <stop offset="100%" stop-color="#ff2a51" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+
+              <!-- Atmosphere -->
+              <rect width="650" height="360" fill="url(#skyGrad)"/>
+
+              <!-- Mountain & Terrain Surface Profile -->
+              <!-- South (Left: Indo-Gangetic Plain) -> Siwalik Hills -> Lesser Himalaya -> Greater Himalaya (Peaks) -> Tibetan Plateau (Right) -->
+              <path d="M 0,220 
+                       L 130,215 
+                       L 180,185 
+                       L 230,195 
+                       L 310,130 
+                       L 360,85 
+                       L 410,120 
+                       L 450,110 
+                       L 650,110 
+                       L 650,360 
+                       L 0,360 Z" 
+                    fill="url(#himalayaCrustGrad)" stroke="#475569" stroke-width="1.5"/>
+
+              <!-- Snowcaps on High Himalaya -->
+              <polygon points="340,105 360,85 380,102 368,110" fill="#e2e8f0" opacity="0.9"/>
+              <polygon points="295,145 310,130 325,142" fill="#cbd5e1" opacity="0.8"/>
+
+              <!-- Indian Underthrusting Lithosphere (Decollement Footwall) -->
+              <path d="M 0,240 
+                       L 140,240 
+                       C 230,245 300,265 370,295 
+                       L 460,335 
+                       L 650,345 
+                       L 650,360 
+                       L 0,360 Z" 
+                    fill="url(#indianPlateGrad)" stroke="#0284c7" stroke-width="2" stroke-dasharray="6,4"/>
+
+              <!-- Major Fault Splay Thrusts Lines -->
+              <!-- 1. HFF (Himalayan Frontal Fault) -->
+              <line x1="140" y1="215" x2="165" y2="245" stroke="#ff3b5c" stroke-width="3"/>
+              <text x="110" y="210" fill="#ff3b5c" font-family="'JetBrains Mono'" font-size="11" font-weight="700">HFF</text>
+
+              <!-- 2. MBT (Main Boundary Thrust) -->
+              <line x1="205" y1="190" x2="250" y2="255" stroke="#ff9100" stroke-width="3"/>
+              <text x="180" y="175" fill="#ff9100" font-family="'JetBrains Mono'" font-size="11" font-weight="700">MBT</text>
+
+              <!-- 3. MCT (Main Central Thrust) -->
+              <line x1="310" y1="130" x2="350" y2="280" stroke="#00f0ff" stroke-width="3"/>
+              <text x="280" y="120" fill="#00f0ff" font-family="'JetBrains Mono'" font-size="11" font-weight="700">MCT</text>
+
+              <!-- 4. MHT (Main Himalayan Thrust Decollement Ramp) -->
+              <path d="M 140,240 C 230,245 300,265 370,295 L 460,335" stroke="#d946ef" stroke-width="4" stroke-dasharray="8,4"/>
+              <text x="380" y="325" fill="#d946ef" font-family="'JetBrains Mono'" font-size="12" font-weight="700">MHT Decollement</text>
+
+              <!-- Elastic Strain Accumulation / Rupture Zone (Dynamic) -->
+              <circle id="svg-stress-zone" cx="300" cy="265" r="38" fill="url(#stressHeat)" opacity="0.35"/>
+              <circle id="svg-rupture-pulse" cx="300" cy="265" r="70" stroke="#ff2a51" stroke-width="2.5" fill="none" opacity="0"/>
+
+              <!-- Vector Arrows: Northward Indian Plate Motion -->
+              <g id="svg-indian-arrow" transform="translate(0,0)">
+                <path d="M 30,290 L 95,290 L 95,282 L 115,295 L 95,308 L 95,300 L 30,300 Z" fill="#38bdf8"/>
+                <text x="15" y="325" fill="#38bdf8" font-family="'JetBrains Mono'" font-size="11" font-weight="700">Indian Plate (~45 mm/yr NNE)</text>
+              </g>
+
+              <!-- Counter Resistance: Tibetan Plateau / Eurasian Plate -->
+              <path d="M 590,170 L 530,170 L 530,162 L 510,175 L 530,188 L 530,180 L 590,180 Z" fill="#c084fc"/>
+              <text x="470" y="160" fill="#c084fc" font-family="'JetBrains Mono'" font-size="11" font-weight="700">Eurasian Plate (Tibetan Plateau)</text>
+
+              <!-- Labels for Geographic Zones -->
+              <text x="15" y="195" fill="#94a3b8" font-family="'Outfit'" font-size="11">Gangetic Plain</text>
+              <text x="175" y="155" fill="#94a3b8" font-family="'Outfit'" font-size="11">Siwaliks</text>
+              <text x="325" y="70" fill="#f8fafc" font-family="'Outfit'" font-size="12" font-weight="700">High Himalayas</text>
+              <text x="500" y="95" fill="#94a3b8" font-family="'Outfit'" font-size="11">Tibetan Plateau (~5,000m)</text>
+            </svg>
+          </div>
+
+          <div class="diagram-legend-bar">
+            <div class="legend-item"><div class="legend-color-box" style="background:#ff3b5c;"></div> HFF: Himalayan Frontal Fault</div>
+            <div class="legend-item"><div class="legend-color-box" style="background:#ff9100;"></div> MBT: Main Boundary Thrust</div>
+            <div class="legend-item"><div class="legend-color-box" style="background:#00f0ff;"></div> MCT: Main Central Thrust</div>
+            <div class="legend-item"><div class="legend-color-box" style="background:#d946ef;"></div> MHT: Main Himalayan Thrust (Decollement)</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. INTERACTIVE EARTHQUAKE GIS MAP -->
+  <section class="map-section" id="interactive-map">
+    <div class="container">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+        <div>
+          <div class="section-tag">Interactive GIS Platform</div>
+          <h2 class="section-title" style="margin-bottom: 8px;">Himalayan Earthquake &amp; Fault Explorer</h2>
+          <p style="color: var(--text-muted); font-size: 0.95rem;">
+            Explore active fault traces, historical seismic hypocenters, hazard zones, and mountain population centers.
+          </p>
+        </div>
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-secondary" id="btn-toggle-live-feed">
+            <span>📡</span> Load Live USGS Feed
+          </button>
+          <button class="btn-secondary" id="btn-reset-map" title="Reset default map view">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+            </svg>
+            Reset View
+          </button>
+        </div>
+      </div>
+
+      <!-- Main GIS Container -->
+      <div class="map-gis-container" id="map-gis-container">
+        
+        <!-- Left Collapsible Control Sidebar -->
+        <aside class="map-sidebar" id="map-sidebar">
+          <div class="sidebar-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                <line x1="4" y1="21" x2="4" y2="14"></line>
+                <line x1="4" y1="10" x2="4" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12" y2="3"></line>
+                <line x1="20" y1="21" x2="20" y2="16"></line>
+                <line x1="20" y1="12" x2="20" y2="3"></line>
+                <line x1="1" y1="14" x2="7" y2="14"></line>
+                <line x1="9" y1="8" x2="15" y2="8"></line>
+                <line x1="17" y1="16" x2="23" y2="16"></line>
+              </svg>
+              GIS Controls &amp; Layers
+            </h3>
+
+            <!-- Search the Himalayan Region -->
+            <div class="map-search-wrap">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="map-search-input" class="map-search-input" placeholder="Search Nepal, Kashmir, Faults..." autocomplete="off">
+              <div class="search-results-dropdown" id="search-results-dropdown"></div>
+            </div>
+          </div>
+
+          <!-- Scrollable Sidebar Body -->
+          <div class="sidebar-body">
+            
+            <!-- Group 1: Map Overlays -->
+            <div>
+              <div class="sidebar-group-title">
+                <span>Active Map Layers</span>
+                <span class="mono" style="color:var(--color-primary);">TOGGLE</span>
+              </div>
+              <div class="layer-toggle-list">
+                <!-- Earthquakes -->
+                <label class="layer-toggle-item" for="toggle-earthquakes">
+                  <div class="layer-label-content">
+                    <span class="layer-dot" style="background:var(--color-zone-v);"></span>
+                    <span>Earthquake Hypocenters</span>
+                  </div>
+                  <div class="toggle-switch">
+                    <input type="checkbox" id="toggle-earthquakes" checked>
+                    <span class="toggle-slider"></span>
+                  </div>
+                </label>
+
+                <!-- Fault Lines -->
+                <label class="layer-toggle-item" for="toggle-faults">
+                  <div class="layer-label-content">
+                    <span class="layer-dot" style="background:var(--color-fault-cyan);"></span>
+                    <span>Himalayan Fault Lines (MHT/MBT)</span>
+                  </div>
+                  <div class="toggle-switch">
+                    <input type="checkbox" id="toggle-faults" checked>
+                    <span class="toggle-slider"></span>
+                  </div>
+                </label>
+
+                <!-- Seismic Hazard Zones -->
+                <label class="layer-toggle-item" for="toggle-hazards">
+                  <div class="layer-label-content">
+                    <span class="layer-dot" style="background:var(--color-zone-iv);"></span>
+                    <span>Seismic Hazard Zones (V – II)</span>
+                  </div>
+                  <div class="toggle-switch">
+                    <input type="checkbox" id="toggle-hazards" checked>
+                    <span class="toggle-slider"></span>
+                  </div>
+                </label>
+
+                <!-- Himalayan Mountain Belt -->
+                <label class="layer-toggle-item" for="toggle-himalaya-range">
+                  <div class="layer-label-content">
+                    <span class="layer-dot" style="background:#38bdf8;"></span>
+                    <span>Himalayan Mountain Belt</span>
+                  </div>
+                  <div class="toggle-switch">
+                    <input type="checkbox" id="toggle-himalaya-range" checked>
+                    <span class="toggle-slider"></span>
+                  </div>
+                </label>
+
+                <!-- Major Cities -->
+                <label class="layer-toggle-item" for="toggle-cities">
+                  <div class="layer-label-content">
+                    <span class="layer-dot" style="background:#eab308;"></span>
+                    <span>Major Cities &amp; Centers</span>
+                  </div>
+                  <div class="toggle-switch">
+                    <input type="checkbox" id="toggle-cities" checked>
+                    <span class="toggle-slider"></span>
+                  </div>
+                </label>
+
+                <!-- Tectonic Motion Vectors -->
+                <label class="layer-toggle-item" for="toggle-tectonics">
+                  <div class="layer-label-content">
+                    <span class="layer-dot" style="background:var(--color-tectonic-purple);"></span>
+                    <span>Plate Motion Vectors</span>
+                  </div>
+                  <div class="toggle-switch">
+                    <input type="checkbox" id="toggle-tectonics" checked>
+                    <span class="toggle-slider"></span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Group 2: Magnitude & Depth Filters -->
+            <div>
+              <div class="sidebar-group-title">
+                <span>Filter Earthquakes</span>
+              </div>
+
+              <!-- Magnitude Slider -->
+              <div class="filter-slider-wrap">
+                <label>
+                  <span>Min Magnitude:</span>
+                  <strong class="mono" id="label-min-mag" style="color:#ff2a51;">M 4.0+</strong>
+                </label>
+                <input type="range" id="slider-min-mag" class="custom-range-slider" min="4.0" max="8.0" step="0.2" value="4.0">
+              </div>
+
+              <!-- Depth Filter -->
+              <div class="filter-slider-wrap" style="margin-top: 14px;">
+                <label for="select-depth-filter">
+                  <span>Focal Depth Class:</span>
+                </label>
+                <select id="select-depth-filter" style="width:100%; background:var(--bg-input); color:#fff; border:1px solid var(--border-subtle); border-radius:var(--radius-sm); padding:8px 12px; font-family:var(--font-body); font-size:0.85rem; outline:none;">
+                  <option value="all">All Depths (0 to 300+ km)</option>
+                  <option value="shallow">Shallow Crustal (&lt; 70 km)</option>
+                  <option value="intermediate">Intermediate (70 – 300 km)</option>
+                  <option value="deep">Deep Intraslab (&gt; 300 km)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Group 3: Real-Time Viewport Telemetry -->
+            <div class="sidebar-hud-summary">
+              <div class="hud-row">
+                <span style="color:var(--text-muted);">Active Earthquakes:</span>
+                <strong id="hud-active-count" style="color:#38bdf8;">--</strong>
+              </div>
+              <div class="hud-row">
+                <span style="color:var(--text-muted);">Max Magnitude:</span>
+                <strong id="hud-max-mag" style="color:var(--color-zone-v);">--</strong>
+              </div>
+              <div class="hud-row">
+                <span style="color:var(--text-muted);">Avg Focal Depth:</span>
+                <strong id="hud-avg-depth" style="color:var(--color-amber);">--</strong>
+              </div>
+            </div>
+
+          </div>
+        </aside>
+
+        <!-- Central Leaflet Map Canvas -->
+        <main class="map-canvas-wrapper" aria-label="Interactive Map Area">
+          
+          <!-- Basemap Style Selector Pills -->
+          <div class="map-basemap-pill-selector">
+            <button class="basemap-pill-btn active" data-basemap="dark">Dark Matter</button>
+            <button class="basemap-pill-btn" data-basemap="satellite">Satellite</button>
+            <button class="basemap-pill-btn" data-basemap="topo">Topography</button>
+          </div>
+
+          <!-- Floating HUD Controls (Right) -->
+          <div class="map-floating-controls">
+            <button class="map-hud-btn" id="btn-toggle-fullscreen" title="Toggle Fullscreen View" aria-label="Toggle Fullscreen">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Leaflet Map Container -->
+          <div id="himalayan-map"></div>
+
+          <!-- Floating Legend Drawer (Bottom Right) -->
+          <div class="map-floating-legend" id="map-legend">
+            <div class="legend-title">
+              <span>Seismic Legend</span>
+              <span class="mono" style="font-size: 10px; color: var(--color-primary);">PGA / MMI</span>
+            </div>
+            <div class="legend-row">
+              <div class="legend-swatch" style="background:var(--color-zone-v);"></div>
+              <span>Zone V — Very High (PGA &gt; 0.36g)</span>
+            </div>
+            <div class="legend-row">
+              <div class="legend-swatch" style="background:var(--color-zone-iv);"></div>
+              <span>Zone IV — High (0.24g to 0.36g)</span>
+            </div>
+            <div class="legend-row">
+              <div class="legend-swatch" style="background:var(--color-zone-iii);"></div>
+              <span>Zone III — Moderate (0.16g to 0.24g)</span>
+            </div>
+            <div class="legend-row">
+              <div class="legend-swatch" style="background:var(--color-zone-ii);"></div>
+              <span>Zone II — Lower (&lt; 0.16g)</span>
+            </div>
+
+            <div class="legend-dot-scale">
+              <span style="font-size: 10px; color: var(--text-dim); margin-right: 4px;">Magnitude:</span>
+              <span class="dot-sample" style="width: 8px; height: 8px;"></span> <span style="font-size: 10px;">M4.5</span>
+              <span class="dot-sample" style="width: 13px; height: 13px;"></span> <span style="font-size: 10px;">M6.0</span>
+              <span class="dot-sample" style="width: 19px; height: 19px;"></span> <span style="font-size: 10px;">M7.5+</span>
+            </div>
+          </div>
+        </main>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. EARTHQUAKE-PRONE ZONES (SEISMIC HAZARD CLASSIFICATION) -->
+  <section class="section" id="hazard-zones">
+    <div class="container">
+      <div class="section-tag danger">Hazard Vulnerability Assessment</div>
+      <h2 class="section-title">Himalayan Seismic Hazard Zonation</h2>
+      <p class="section-subtitle">
+        Visual classification of seismic hazard levels based on active tectonic proximity, peak ground acceleration (PGA), and historical shaking intensity.
+      </p>
+
+      <!-- 4 Hazard Level Cards -->
+      <div class="hazard-zones-grid">
+        <!-- Zone V -->
+        <div class="hazard-zone-card zone-5">
+          <span class="zone-badge">ZONE V • HIGHEST VULNERABILITY</span>
+          <h3>Very High Hazard</h3>
+          <div class="zone-pga-spec">Peak Ground Acceleration &gt; 0.36g | MMI IX+</div>
+          <p>
+            Areas with active continental collision structures, steep locked ramps, and extreme rupture probability. Capable of generating catastrophic M7.5+ events with violent ground acceleration and total structural collapse in unreinforced masonry.
+          </p>
+          <ul class="zone-regions-list">
+            <li>📍 Kashmir Valley &amp; Muzaffarabad</li>
+            <li>📍 Kangra &amp; Chamba (Himachal)</li>
+            <li>📍 Uttarkashi &amp; Chamoli (Uttarakhand)</li>
+            <li>📍 Central Nepal &amp; Kathmandu Basin</li>
+            <li>📍 Assam &amp; Northeast India</li>
+          </ul>
+        </div>
+
+        <!-- Zone IV -->
+        <div class="hazard-zone-card zone-4">
+          <span class="zone-badge">ZONE IV • HIGH SEISMICITY</span>
+          <h3>High Hazard</h3>
+          <div class="zone-pga-spec">Peak Ground Acceleration 0.24g – 0.36g | MMI VIII</div>
+          <p>
+            Areas bordering the main collision front where destructive earthquakes are frequent. Encompasses the Sub-Himalayan foothill alluvial belt and major high-density urban corridors that experience amplified distal shaking.
+          </p>
+          <ul class="zone-regions-list">
+            <li>📍 Delhi-NCR &amp; Northern Haryana</li>
+            <li>📍 Jammu Foothills &amp; Punjab</li>
+            <li>📍 Southern Nepal Terai Plain</li>
+            <li>📍 Bhutan Sub-Himalayan Foothills</li>
+            <li>📍 Southern Tibetan Periphery</li>
+          </ul>
+        </div>
+
+        <!-- Zone III -->
+        <div class="hazard-zone-card zone-3">
+          <span class="zone-badge">ZONE III • MODERATE SEISMICITY</span>
+          <h3>Moderate Hazard</h3>
+          <div class="zone-pga-spec">Peak Ground Acceleration 0.16g – 0.24g | MMI VII</div>
+          <p>
+            Transitional zones with comparatively lower but still important seismic hazard. Thick saturated alluvial soils in this zone are prone to liquefaction and long-period wave resonance from distant megaquakes.
+          </p>
+          <ul class="zone-regions-list">
+            <li>📍 Indo-Gangetic Plains (UP &amp; Bihar)</li>
+            <li>📍 Central Punjab Plain</li>
+            <li>📍 Interior Tibetan Plateau</li>
+            <li>📍 Brahmaputra Valley Margins</li>
+          </ul>
+        </div>
+
+        <!-- Zone II -->
+        <div class="hazard-zone-card zone-2">
+          <span class="zone-badge">ZONE II • LOWER HAZARD</span>
+          <h3>Lower Hazard</h3>
+          <div class="zone-pga-spec">Peak Ground Acceleration &lt; 0.16g | MMI VI and Below</div>
+          <p>
+            Relatively stable crystalline craton shield areas further south of the Himalayan frontal thrusts. Shaking is typically minor, though moderate intraplate activity can occasionally register.
+          </p>
+          <ul class="zone-regions-list">
+            <li>📍 Central Peninsular India</li>
+            <li>📍 Southern Rajasthan Shield</li>
+            <li>📍 Stable Peninsular Transition</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Scientific Disclaimer Notice -->
+      <div class="hazard-disclaimer-box">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" style="flex-shrink:0;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <div>
+          <strong style="color:#fff;">Authoritative Classification Disclaimer:</strong>
+          The seismic zonation presented on this website harmonizes official classifications from the <em>Bureau of Indian Standards (IS 1893:2016 Part 1)</em>, the <em>Department of Mines and Geology (DMG Nepal)</em>, and the <em>Global Seismic Hazard Assessment Program (GSHAP)</em>. Seismic hazard represents probabilistic ground motion rather than a deterministic forecast of earthquake occurrence.
+        </div>
+      </div>
+
+      <!-- Interactive City Seismic Vulnerability Explorer -->
+      <div class="city-vulnerability-box">
+        <div class="city-vuln-header">
+          <div>
+            <h3 style="font-size: 1.3rem;">Urban Seismic Vulnerability Index</h3>
+            <p style="font-size: 0.88rem; color: var(--text-muted);">
+              Inspect population exposure, soil conditions, and expected acceleration for major Himalayan cities.
+            </p>
+          </div>
+          <!-- City Quick Selection Pills -->
+          <div class="city-pill-selector">
+            <button class="city-selector-btn active" data-city="Kathmandu">🇳🇵 Kathmandu</button>
+            <button class="city-selector-btn" data-city="New Delhi">🇮🇳 New Delhi</button>
+            <button class="city-selector-btn" data-city="Srinagar">🇮🇳 Srinagar</button>
+            <button class="city-selector-btn" data-city="Thimphu">🇧🇹 Thimphu</button>
+            <button class="city-selector-btn" data-city="Lhasa">🇨🇳 Lhasa</button>
+            <button class="city-selector-btn" data-city="Dehradun">🇮🇳 Dehradun</button>
+            <button class="city-selector-btn" data-city="Guwahati">🇮🇳 Guwahati</button>
+            <button class="city-selector-btn" data-city="Muzaffarabad">🇵🇰 Muzaffarabad</button>
+          </div>
+        </div>
+
+        <!-- City Live Profile Card -->
+        <div class="city-profile-display">
+          <div class="profile-col">
+            <h4>Target City</h4>
+            <div class="val" id="city-prof-name">Kathmandu (Nepal)</div>
+            <h4>Population Exposed</h4>
+            <div class="val" id="city-prof-pop">1.5 Million (Metro: 3M)</div>
+            <h4>Official Hazard Zone</h4>
+            <div class="val" id="city-prof-zone" style="color:var(--color-zone-v);">Zone V (Very High)</div>
+          </div>
+
+          <div class="profile-col">
+            <h4>Expected Peak Ground Acceleration</h4>
+            <div class="val" id="city-prof-pga" style="color:var(--color-primary);">0.36g – 0.45g</div>
+            <h4>Soil &amp; Geotechnical Condition</h4>
+            <div class="val" id="city-prof-soil" style="font-size:0.95rem; font-weight:500;">Ancient Lacustrine Soft Sediments</div>
+            <h4>Vulnerability Classification</h4>
+            <div class="val" id="city-prof-risk" style="color:var(--color-zone-v);">Critical</div>
+          </div>
+
+          <div class="profile-col" style="display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <h4>Geological Risk Analysis</h4>
+              <p id="city-prof-desc" style="font-size:0.85rem; color:var(--text-muted); line-height:1.4; margin-bottom:12px;">
+                Deep soft lake sediment basin amplifies low-frequency seismic waves and triggers severe liquefaction.
+              </p>
+              <h4>Designated Safe Evacuation Hubs</h4>
+              <ul id="city-prof-evac" style="list-style:none; font-size:0.8rem; color:#cbd5e1; display:flex; flex-direction:column; gap:4px;">
+                <li>🛡️ Tundikhel Open Ground</li>
+                <li>🛡️ Swayambhu Ring Road</li>
+              </ul>
+            </div>
+            <button class="btn-secondary" id="btn-fly-city" style="margin-top:14px; width:100%; justify-content:center;">
+              Fly to City on Map
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 5. HIMALAYAN FAULT SYSTEMS -->
+  <section class="section" id="fault-systems">
+    <div class="container">
+      <div class="section-tag">Structural Geology</div>
+      <h2 class="section-title">Major Himalayan Fault Systems</h2>
+      <p class="section-subtitle">
+        The Himalayan orogen is dissected by several major boundary thrusts and transform shear zones accommodating continental convergence.
+      </p>
+
+      <div class="faults-grid">
+        <!-- 1. MHT -->
+        <div class="fault-card">
+          <div class="fault-card-header">
+            <span class="fault-tag">BASAL DETACHMENT</span>
+            <span class="mono" style="font-size:11px; color:#d946ef;">Slip: 18-21 mm/yr</span>
+          </div>
+          <h3>Main Himalayan Thrust (MHT)</h3>
+          <div class="fault-sub-spec">Depth: 5 to 25 km beneath the mountain chain</div>
+          <p>
+            The master blind continental decollement plane beneath the entire Himalayan wedge. It separates the underthrusting Indian shield from the upper mountain crust. The locked portion along this plane is the source of the largest M8+ megaquakes.
+          </p>
+          <div class="fault-specs-table">
+            <div class="row"><span>Fault Geometry:</span> <strong>Low-angle thrust decollement</strong></div>
+            <div class="row"><span>Last Mega-Rupture:</span> <strong>2015 Gorkha (M7.8)</strong></div>
+            <div class="row"><span>Seismic Threat:</span> <strong style="color:var(--color-zone-v);">Maximum (M8.5+ potential)</strong></div>
+          </div>
+          <button class="fault-btn-fly btn-view-fault" data-lat="28.2" data-lng="84.5">
+            <span>Locate MHT on Map</span>
+          </button>
+        </div>
+
+        <!-- 2. HFF / MFT -->
+        <div class="fault-card">
+          <div class="fault-card-header">
+            <span class="fault-tag">FRONTAL THRUST</span>
+            <span class="mono" style="font-size:11px; color:#ff3b5c;">Slip: 10-15 mm/yr</span>
+          </div>
+          <h3>Himalayan Frontal Fault (HFF)</h3>
+          <div class="fault-sub-spec">Depth: Surface to 10 km (Emergent Thrust)</div>
+          <p>
+            The southernmost active tectonic boundary where the Siwalik foothill hills abruptly crash into the flat Indo-Gangetic alluvial plain. Represents the surface manifestation of the Main Himalayan Thrust.
+          </p>
+          <div class="fault-specs-table">
+            <div class="row"><span>Fault Geometry:</span> <strong>Shallow-dipping emergent thrust</strong></div>
+            <div class="row"><span>Surface Ruptures:</span> <strong>1934 Bihar-Nepal / 1950 Assam</strong></div>
+            <div class="row"><span>Seismic Threat:</span> <strong style="color:var(--color-zone-v);">Critical (Dense plain proximity)</strong></div>
+          </div>
+          <button class="fault-btn-fly btn-view-fault" data-lat="29.8" data-lng="78.5">
+            <span>Locate HFF on Map</span>
+          </button>
+        </div>
+
+        <!-- 3. MBT -->
+        <div class="fault-card">
+          <div class="fault-card-header">
+            <span class="fault-tag">REGIONAL THRUST</span>
+            <span class="mono" style="font-size:11px; color:#ff9100;">Slip: 5-10 mm/yr</span>
+          </div>
+          <h3>Main Boundary Thrust (MBT)</h3>
+          <div class="fault-sub-spec">Depth: 10 to 25 km beneath Lesser Himalaya</div>
+          <p>
+            Major regional thrust fault extending over 2,000 km, demarcating the boundary between the sedimentary Siwaliks and the metamorphic rocks of the Lesser Himalaya. Highly seismogenic with frequent moderate-to-large quakes.
+          </p>
+          <div class="fault-specs-table">
+            <div class="row"><span>Fault Geometry:</span> <strong>North-dipping thrust fault</strong></div>
+            <div class="row"><span>Key Event:</span> <strong>1905 Kangra (M7.8)</strong></div>
+            <div class="row"><span>Seismic Threat:</span> <strong style="color:var(--color-zone-iv);">Very High</strong></div>
+          </div>
+          <button class="fault-btn-fly btn-view-fault" data-lat="32.4" data-lng="76.4">
+            <span>Locate MBT on Map</span>
+          </button>
+        </div>
+
+        <!-- 4. MCT -->
+        <div class="fault-card">
+          <div class="fault-card-header">
+            <span class="fault-tag">CRYSTALLINE SHEAR</span>
+            <span class="mono" style="font-size:11px; color:#00f0ff;">Slip: 2-6 mm/yr</span>
+          </div>
+          <h3>Main Central Thrust (MCT)</h3>
+          <div class="fault-sub-spec">Depth: 15 to 35 km beneath Higher Himalaya</div>
+          <p>
+            Historic ductile shear zone that carried high-grade metamorphic gneisses and granites of the Higher Himalayas southward over the Lesser Himalaya. Now exhibits intense micro-seismic clusters along its mid-crustal ramp.
+          </p>
+          <div class="fault-specs-table">
+            <div class="row"><span>Fault Geometry:</span> <strong>Ductile-to-brittle shear zone</strong></div>
+            <div class="row"><span>Seismicity:</span> <strong>High microseismicity &amp; ramp quakes</strong></div>
+            <div class="row"><span>Seismic Threat:</span> <strong style="color:#00f0ff;">High Intermediate Depth</strong></div>
+          </div>
+          <button class="fault-btn-fly btn-view-fault" data-lat="30.6" data-lng="79.9">
+            <span>Locate MCT on Map</span>
+          </button>
+        </div>
+
+        <!-- 5. ITSZ -->
+        <div class="fault-card">
+          <div class="fault-card-header">
+            <span class="fault-tag">PLATE SUTURE</span>
+            <span class="mono" style="font-size:11px; color:#38bdf8;">Paleo-Collision Boundary</span>
+          </div>
+          <h3>Indus-Tsangpo Suture Zone</h3>
+          <div class="fault-sub-spec">Depth: Upper to Mid Crust (Tibet Border)</div>
+          <p>
+            The geological suture marking where the ancient Tethys Ocean vanished and the Indian continent collided with Eurasia ~50 million years ago. Contains ophiolites and marine sediments from the consumed ocean floor.
+          </p>
+          <div class="fault-specs-table">
+            <div class="row"><span>Fault Geometry:</span> <strong>Suture line / Ophiolite melange</strong></div>
+            <div class="row"><span>Current Motion:</span> <strong>Strike-slip &amp; Normal faulting</strong></div>
+            <div class="row"><span>Seismic Threat:</span> <strong style="color:#eab308;">Moderate Intraplate</strong></div>
+          </div>
+          <button class="fault-btn-fly btn-view-fault" data-lat="33.8" data-lng="78.2">
+            <span>Locate ITSZ on Map</span>
+          </button>
+        </div>
+
+        <!-- 6. Karakoram & Chaman Faults -->
+        <div class="fault-card">
+          <div class="fault-card-header">
+            <span class="fault-tag">TRANSFORM SHEAR</span>
+            <span class="mono" style="font-size:11px; color:#e11d48;">Slip: 19-24 mm/yr</span>
+          </div>
+          <h3>Chaman &amp; Karakoram Faults</h3>
+          <div class="fault-sub-spec">Western Syntaxis &amp; Tibetan Extrusion</div>
+          <p>
+            Major strike-slip fault systems on the flanks of the Indian plate. The Chaman fault accommodates northward shearing in Pakistan/Afghanistan, while the Karakoram fault facilitates the eastward escape of Tibet.
+          </p>
+          <div class="fault-specs-table">
+            <div class="row"><span>Fault Geometry:</span> <strong>Major strike-slip transform</strong></div>
+            <div class="row"><span>Notable Event:</span> <strong>1935 Quetta / 2005 Kashmir Syntaxis</strong></div>
+            <div class="row"><span>Seismic Threat:</span> <strong style="color:var(--color-zone-v);">Critical (Fast slip rate)</strong></div>
+          </div>
+          <button class="fault-btn-fly btn-view-fault" data-lat="34.4" data-lng="73.6">
+            <span>Locate Syntaxis on Map</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. HISTORICAL EARTHQUAKES -->
+  <section class="section" id="historical-earthquakes">
+    <div class="container">
+      <div class="section-tag danger">Seismic Archive</div>
+      <h2 class="section-title">Significant Historical Himalayan Earthquakes</h2>
+      <p class="section-subtitle">
+        A documented chronicle of catastrophic seismic events that have reshaped the topography and communities across India, Nepal, Pakistan, Bhutan, and China.
+      </p>
+
+      <!-- Category Filter Pills -->
+      <div class="history-filter-bar">
+        <div class="history-pills">
+          <button class="history-pill-btn active" data-filter="all">All Key Events</button>
+          <button class="history-pill-btn" data-filter="m8">M 8.0+ Megaquakes</button>
+          <button class="history-pill-btn" data-filter="recent">21st Century (2000s+)</button>
+          <button class="history-pill-btn" data-filter="nepal">Nepal Belt</button>
+          <button class="history-pill-btn" data-filter="india">India Belt</button>
+        </div>
+        <span class="mono" style="font-size: 0.85rem; color: var(--text-dim);">Click card to locate on GIS map</span>
+      </div>
+
+      <!-- Dynamic Cards Grid (Rendered by js/app.js) -->
+      <div class="history-cards-grid" id="history-cards-container">
+        <!-- Rendered via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. EARTHQUAKE STATISTICS DASHBOARD -->
+  <section class="section" id="analytics-dashboard">
+    <div class="container">
+      <div class="section-tag">Seismic Intelligence</div>
+      <h2 class="section-title">Earthquake Statistics &amp; Analytics Dashboard</h2>
+      <p class="section-subtitle">
+        Dynamic visual metrics summarizing magnitude frequency, national distribution, chronological energy release, and hypocentral depth profiles.
+      </p>
+
+      <div class="stats-dashboard-grid">
+        <!-- Chart 1: Magnitude Distribution -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                <rect x="3" y="12" width="4" height="9"></rect>
+                <rect x="10" y="8" width="4" height="13"></rect>
+                <rect x="17" y="3" width="4" height="18"></rect>
+              </svg>
+              Earthquakes by Magnitude Range
+            </h3>
+            <span class="mono" style="font-size: 11px; color: var(--color-primary);">BAR CHART</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="chart-magnitude"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Quakes by Country -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff2a51" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+              Earthquakes by Country / Territory
+            </h3>
+            <span class="mono" style="font-size: 11px; color: var(--color-zone-v);">DOUGHNUT</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="chart-country"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 3: Historical Timeline -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+              Chronological Timeline &amp; Energy Release
+            </h3>
+            <span class="mono" style="font-size: 11px; color: var(--color-primary);">LINE GRAPH</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="chart-timeline"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 4: Focal Depth Distribution -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ff7a00" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+              </svg>
+              Focal Depth Distribution (Hypocenter)
+            </h3>
+            <span class="mono" style="font-size: 11px; color: var(--color-amber);">PIE CHART</span>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="chart-depth"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. EARTHQUAKE SAFETY & PREPAREDNESS -->
+  <section class="section" id="safety-guide">
+    <div class="container">
+      <div class="section-tag" style="color:var(--color-emerald); background:rgba(16,185,129,0.1); border-color:rgba(16,185,129,0.3);">
+        Life-Saving Protocol
+      </div>
+      <h2 class="section-title">Earthquake Safety &amp; Preparedness</h2>
+      <p class="section-subtitle">
+        Crucial actionable steps to safeguard your life and family before, during, and after a major Himalayan earthquake.
+      </p>
+
+      <!-- Stage Selector Tabs -->
+      <div class="safety-tabs">
+        <button class="safety-tab-btn" data-stage="before">
+          <span>📋</span> Before an Earthquake
+        </button>
+        <button class="safety-tab-btn active" data-stage="during">
+          <span>⚠️</span> During Shaking (DROP, COVER, HOLD ON)
+        </button>
+        <button class="safety-tab-btn" data-stage="after">
+          <span>🛡️</span> After an Earthquake
+        </button>
+      </div>
+
+      <!-- STAGE 1: BEFORE AN EARTHQUAKE -->
+      <div class="safety-stage-content" id="safety-stage-before">
+        <div class="safety-checklist-grid">
+          <div class="safety-check-item">
+            <div class="safety-check-icon">🏢</div>
+            <div>
+              <h4>Identify Safe Zones in Every Room</h4>
+              <p>Locate sturdy tables, load-bearing desks, or interior walls away from glass windows, exterior walls, and heavy overhead lighting fixtures.</p>
+            </div>
+          </div>
+
+          <div class="safety-check-item">
+            <div class="safety-check-icon">🧰</div>
+            <div>
+              <h4>Prepare a 72-Hour Survival Kit</h4>
+              <p>Assemble water (3 liters/person/day), non-perishable food, flashlights, battery-powered radio, first-aid supplies, whistle, and personal medications.</p>
+            </div>
+          </div>
+
+          <div class="safety-check-item">
+            <div class="safety-check-icon">⚓</div>
+            <div>
+              <h4>Secure Heavy Furniture &amp; Appliances</h4>
+              <p>Anchor tall bookcases, wardrobes, water heaters, and televisions to wall studs using L-brackets and flexible safety straps to prevent toppling.</p>
+            </div>
+          </div>
+
+          <div class="safety-check-item">
+            <div class="safety-check-icon">🗺️</div>
+            <div>
+              <h4>Establish Family Emergency Plan</h4>
+              <p>Designate an out-of-area emergency contact person and choose an open-space outdoor meeting place away from power lines and brick facades.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STAGE 2: DURING AN EARTHQUAKE (DROP, COVER, HOLD ON) -->
+      <div class="safety-stage-content active" id="safety-stage-during">
+        <div class="dch-trio-grid">
+          <!-- Step 1: DROP -->
+          <div class="dch-action-card">
+            <span class="dch-step-badge">STEP 01</span>
+            <div class="dch-icon-wrapper">
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M12 5v14M5 12l7 7 7-7"/>
+              </svg>
+            </div>
+            <h3>DROP</h3>
+            <p>
+              <strong>Drop onto your hands and knees</strong> immediately wherever you are. This lower position protects you from being knocked over by sudden high-acceleration S-waves and allows you to crawl if necessary.
+            </p>
+          </div>
+
+          <!-- Step 2: COVER -->
+          <div class="dch-action-card">
+            <span class="dch-step-badge">STEP 02</span>
+            <div class="dch-icon-wrapper">
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+            </div>
+            <h3>COVER</h3>
+            <p>
+              <strong>Take cover under a sturdy table or desk</strong>. If no shelter is nearby, crawl next to an interior wall and cover your head and neck with your arms. Stay away from glass windows and hanging shelves.
+            </p>
+          </div>
+
+          <!-- Step 3: HOLD ON -->
+          <div class="dch-action-card">
+            <span class="dch-step-badge">STEP 03</span>
+            <div class="dch-icon-wrapper">
+              <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="m4.93 4.93 4.24 4.24M14.83 9.17l4.24-4.24M14.83 14.83l4.24 4.24M9.17 14.83l-4.24 4.24"></path>
+              </svg>
+            </div>
+            <h3>HOLD ON</h3>
+            <p>
+              <strong>Hold onto your shelter</strong> with one hand and stay ready to move with it until shaking completely stops. If under no shelter, keep both hands clasped firmly behind your neck.
+            </p>
+          </div>
+        </div>
+
+        <div style="margin-top: 24px; padding: 16px 20px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.25); border-radius: var(--radius-md); font-size: 0.88rem; color: #a7f3d0; text-align: center;">
+          💡 <strong>Special Mountain Hazard Note:</strong> If outdoors in Himalayan mountain terrain during shaking, watch out for sudden rockfalls, boulder slides, and steep slope failures. Move to wide open valley bottoms away from riverbanks prone to flash floods.
+        </div>
+      </div>
+
+      <!-- STAGE 3: AFTER AN EARTHQUAKE -->
+      <div class="safety-stage-content" id="safety-stage-after">
+        <div class="safety-checklist-grid">
+          <div class="safety-check-item">
+            <div class="safety-check-icon">🩹</div>
+            <div>
+              <h4>Check for Injuries &amp; Render First Aid</h4>
+              <p>Examine yourself and those around you for injuries. Provide basic first aid. Do not move seriously injured individuals unless they are in immediate danger.</p>
+            </div>
+          </div>
+
+          <div class="safety-check-item">
+            <div class="safety-check-icon">🔥</div>
+            <div>
+              <h4>Inspect for Gas Leaks &amp; Fire Hazards</h4>
+              <p>Check for gas odors. If smelled, immediately shut off main valve, open windows, and evacuate outdoors. Do not operate electrical light switches or matches.</p>
+            </div>
+          </div>
+
+          <div class="safety-check-item">
+            <div class="safety-check-icon">🌊</div>
+            <div>
+              <h4>Prepare for Strong Aftershocks</h4>
+              <p>Secondary aftershocks can strike minutes, hours, or days later, collapsing already-weakened masonry structures. Keep helmets and emergency supplies ready.</p>
+            </div>
+          </div>
+
+          <div class="safety-check-item">
+            <div class="safety-check-icon">📻</div>
+            <div>
+              <h4>Listen to Official Emergency Broadcasts</h4>
+              <p>Tune to battery-powered radios or official civil defense disaster channels. Stay off phone lines to preserve cellular bandwidth for search and rescue operations.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 9. REFERENCES & DATA SOURCES -->
+  <section class="section" id="references" style="padding-bottom: 40px;">
+    <div class="container">
+      <div class="section-tag">Scientific Pedigree</div>
+      <h2 class="section-title">Data Sources &amp; References</h2>
+      <p class="section-subtitle">
+        Curated geospatial and seismological information sourced from leading planetary and national geological agencies.
+      </p>
+
+      <div class="references-grid">
+        <div class="ref-card">
+          <h4>USGS Earthquake Hazards Program</h4>
+          <p>Global Seismographic Network (GSN), real-time earthquake feeds, hypocentral catalogs, and moment tensor solutions.</p>
+          <a href="https://earthquake.usgs.gov/" target="_blank" rel="noopener noreferrer" class="ref-link">
+            <span>earthquake.usgs.gov</span> &rarr;
+          </a>
+        </div>
+
+        <div class="ref-card">
+          <h4>International Seismological Centre (ISC)</h4>
+          <p>The definitive global seismic bulletin, comprehensive historical hypocenter relocations, and ISC-GEM catalog.</p>
+          <a href="http://www.isc.ac.uk/" target="_blank" rel="noopener noreferrer" class="ref-link">
+            <span>isc.ac.uk</span> &rarr;
+          </a>
+        </div>
+
+        <div class="ref-card">
+          <h4>National Center for Seismology (NCS India)</h4>
+          <p>Seismic telemetry network under the Ministry of Earth Sciences (MoES), monitoring Indian plate boundaries.</p>
+          <a href="https://seismo.gov.in/" target="_blank" rel="noopener noreferrer" class="ref-link">
+            <span>seismo.gov.in</span> &rarr;
+          </a>
+        </div>
+
+        <div class="ref-card">
+          <h4>Department of Mines and Geology (DMG Nepal)</h4>
+          <p>National Seismological Centre of Nepal, monitoring seismic activity and active fault mapping across the Nepal Himalaya.</p>
+          <a href="http://seismonepal.gov.np/" target="_blank" rel="noopener noreferrer" class="ref-link">
+            <span>seismonepal.gov.np</span> &rarr;
+          </a>
+        </div>
+
+        <div class="ref-card">
+          <h4>Bureau of Indian Standards (BIS)</h4>
+          <p>IS 1893 (Part 1): 2016 Criteria for Earthquake Resistant Design of Structures and Seismic Hazard Zonation Map.</p>
+          <a href="https://bis.gov.in/" target="_blank" rel="noopener noreferrer" class="ref-link">
+            <span>bis.gov.in</span> &rarr;
+          </a>
+        </div>
+
+        <div class="ref-card">
+          <h4>Global Seismic Hazard Program (GSHAP)</h4>
+          <p>Global probabilistic seismic hazard maps, Peak Ground Acceleration (PGA) baselines, and continental strain rates.</p>
+          <a href="http://www.seismo.ethz.ch/static/GSHAP/" target="_blank" rel="noopener noreferrer" class="ref-link">
+            <span>seismo.ethz.ch</span> &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10. ACADEMIC ACKNOWLEDGEMENT & INSTITUTIONAL CREDITS -->
+  <section class="lpu-acknowledgement-section" id="acknowledgement">
+    <div class="container">
+      <div class="lpu-showcase-card">
+        <div class="lpu-card-grid">
+          <!-- University Logo & Identity Badge -->
+          <div class="lpu-logo-box">
+            <img src="assets/lpu_logo.svg" alt="Lovely Professional University (LPU) Official Logo" width="240" height="80" loading="lazy">
+            <div class="lpu-accreditation-tag">NAAC A++ ACCREDITED UNIVERSITY</div>
+            <span style="font-size: 0.75rem; color: var(--text-dim); margin-top: 8px;">Jalandhar - Delhi G.T. Road, Phagwara, Punjab, India</span>
+          </div>
+
+          <!-- Acknowledgement Content -->
+          <div class="lpu-content">
+            <div class="lpu-tag">Academic Research &amp; Institutional Gratitude</div>
+            <h2 class="lpu-title">Lovely Professional University</h2>
+            <p class="lpu-subtitle">
+              School of Computer Science &amp; Engineering &bull; School of Civil &bull; Department of Geoscience Studies
+            </p>
+            
+            <div class="lpu-statement">
+              "This interactive geospatial research platform and seismic hazard study on the Himalayan collision belt was conceptualized, researched, and developed under the academic aegis and curriculum framework of <strong>Lovely Professional University (LPU)</strong>. Sincere gratitude is extended to the university leadership, distinguished faculty mentors, and academic guides for their relentless encouragement, provision of high-performance computing resources, and dedication to fostering scientific research that addresses real-world disaster vulnerabilities in the Himalayan community."
+            </div>
+
+            <!-- 4 Academic Pillars -->
+            <div class="lpu-pillars-grid">
+              <div class="lpu-pillar-card">
+                <div class="lpu-pillar-icon">🏛️</div>
+                <h5>Faculty Mentorship</h5>
+                <p>Guidance in geodynamics, structural geology, and geospatial computing.</p>
+              </div>
+              <div class="lpu-pillar-card">
+                <div class="lpu-pillar-icon">🗺️</div>
+                <h5>GIS &amp; Hazard Modeling</h5>
+                <p>Curating tectonic faults, hypocenters, and IS 1893 seismic zonation.</p>
+              </div>
+              <div class="lpu-pillar-card">
+                <div class="lpu-pillar-icon">🛡️</div>
+                <h5>Disaster Risk Awareness</h5>
+                <p>Promoting community earthquake preparedness and life-saving education.</p>
+              </div>
+              <div class="lpu-pillar-card">
+                <div class="lpu-pillar-icon">🌟</div>
+                <h5>Research Excellence</h5>
+                <p>Living the university motto: <em>'Transforming Education, Transforming India'</em>.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:14px;">
+            <div class="brand-icon-wrap" style="width:34px; height:34px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.2">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+            </div>
+            <h4 style="font-size:1.1rem; color:#fff;">Himalayan Seismic Lab</h4>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; max-width: 320px;">
+            An interactive educational and scientific geoscience project dedicated to mapping earthquake vulnerability, active faults, and tectonic hazards across the Himalayan arc.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h5>Focus Regions</h5>
+          <ul class="footer-links">
+            <li><a href="#interactive-map">🇮🇳 India (Himalayan Belt)</a></li>
+            <li><a href="#interactive-map">🇳🇵 Nepal Central Arc</a></li>
+            <li><a href="#interactive-map">🇧🇹 Bhutan Foothills</a></li>
+            <li><a href="#interactive-map">🇵🇰 Pakistan Syntaxis</a></li>
+            <li><a href="#interactive-map">🇨🇳 Tibet Autonomous Region</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Core Faults</h5>
+          <ul class="footer-links">
+            <li><a href="#fault-systems">Main Himalayan Thrust (MHT)</a></li>
+            <li><a href="#fault-systems">Himalayan Frontal Fault (HFF)</a></li>
+            <li><a href="#fault-systems">Main Boundary Thrust (MBT)</a></li>
+            <li><a href="#fault-systems">Main Central Thrust (MCT)</a></li>
+            <li><a href="#fault-systems">Indus-Tsangpo Suture (ITSZ)</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h5>Safety &amp; Resources</h5>
+          <ul class="footer-links">
+            <li><a href="#safety-guide">Drop, Cover, Hold On</a></li>
+            <li><a href="#safety-guide">Emergency 72h Survival Kit</a></li>
+            <li><a href="#hazard-zones">Seismic Zone V Protocol</a></li>
+            <li><a href="#references">Authoritative References</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 Himalayan Seismic Geospatial Platform. Academic Capstone &amp; Geospatial Research Initiative, <strong>Lovely Professional University (LPU)</strong>.
+        </div>
+        <div class="mono" style="font-size: 11px;">
+          Coordinates Bounding Box: 22°N – 38°N | 68°E – 102°E &bull; Phagwara, Punjab
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <!-- Leaflet GIS JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Application Modules -->
+  <script src="js/data.js"></script>
+  <script src="js/tectonics.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
